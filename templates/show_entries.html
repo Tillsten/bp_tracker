@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block body %}
+<head>
+<link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.9.2.min.css" type="text/css" />
+  <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.9.2.min.js"></script>
+  {{script|safe}}
+</head>
+  {% if session.logged_in %}
+    <form class=add-entry action="{{ url_for('add_entry') }}" method=post>
+    <dl>
+        <dt>SYS
+        <dd><input type="number" name="systolic" value=130>
+        <dt>DIA
+        <dd><input type="number" name="diatolic" value=80>
+        <dt>PUL
+        <dd><input type="number" name="pulse" value=70>
+
+        <dt>Side
+        <dd><input type="radio" name="side" value="left"> Left-arm
+        <dd><input type="radio" name="side" value="right" checked> Right-arm
+        <dt>Time
+        <dd><input type="radio" name="time" value="after_sleep"> After sleep
+        <dd><input type="radio" name="time" value="before_sleep" checked> Before sleep
+    </dl>
+    <input type=submit value=Share>
+    </form>
+  {% endif %}
+  {{div|safe}}
+  <div class=table>
+  <table id="t01" style="float:center">
+  <tr>
+    <th style="text-align:left">Date</th>
+    <th>SYS</th>
+    <th>DIA</th>
+    <th>Pulse</th>
+    <th/>
+  </tr>
+  {% for entry in entries %}
+  <tr>
+    <td style="text-align:left">{{ entry.date.strftime('%Y-%m-%d  %H:%M') }}</td>
+    <td>{{ entry.sys }}</td>
+    <td>{{ entry.dia }}</td>
+    <td>{{ entry.pulse }}</td>
+    <td><a href="{{ url_for('delete_entry', entry_id=entry.id)}}">del</a><td>
+  </tr>
+
+
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em>
+  {% endfor %}
+  </table>
+  </div>
+{% endblock %}
